@@ -4,9 +4,173 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ReconocimientoFacial"
+        xmlns:views="clr-namespace:ReconocimientoFacial.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Background="#050B14" Foreground="#FFFFFF"
+        WindowStyle="None" AllowsTransparency="True"
+        Title="NEURAL SENTINEL" Height="700" Width="1050" WindowStartupLocation="CenterScreen">
+    
+    <Border BorderBrush="#112A4F" BorderThickness="1" CornerRadius="10" Background="#050B14" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+        <Grid>
+            <!-- Layout Base -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="220" x:Name="SidebarColumn" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-    </Grid>
+            <!-- SIDEBAR -->
+            <Border Grid.Column="0" Background="#050B14" BorderBrush="#001F3F" BorderThickness="0,0,1,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="80"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- LOGO -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
+                        <TextBlock Text="⭕" Foreground="#00F2FF" FontSize="24" VerticalAlignment="Center"/>
+                        <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" x:Name="LogoStackPane">
+                            <TextBlock x:Name="LogoText1" Text="NEURAL SENTINEL" Foreground="#00F2FF" FontWeight="Bold" FontSize="12" />
+                            <TextBlock x:Name="LogoText2" Text="CORE V4.0.2" Foreground="#555" FontSize="10" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- MENÚ ITEMS -->
+                    <StackPanel Grid.Row="1" Margin="0,20,0,0">
+                        <!-- Boton Activo (User Management) -->
+                        <Border Background="#1A0D26" BorderBrush="#6A0DAD" BorderThickness="4,0,0,0" Height="50">
+                            <StackPanel Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="👤" Foreground="#CF9FFF" FontSize="18"/>
+                                <TextBlock x:Name="MenuText1" Text="User Management" Foreground="#CF9FFF" Margin="15,0,0,0" FontSize="14" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Border>
+                        <!-- Item Normal -->
+                        <Border Height="50" Background="Transparent">
+                            <StackPanel Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="📹" Foreground="#555" FontSize="18"/>
+                                <TextBlock x:Name="MenuText2" Text="Video Analysis" Foreground="#7A8DAB" Margin="15,0,0,0" FontSize="14" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <!-- Item Normal -->
+                        <Border Height="50" Background="Transparent">
+                            <StackPanel Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="⚙" Foreground="#555" FontSize="18"/>
+                                <TextBlock x:Name="MenuText3" Text="Settings" Foreground="#7A8DAB" Margin="15,0,0,0" FontSize="14" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Botón Flotante Toggle (Botón Circular en la union) -->
+                    <Button Click="MenuToggleButton_Click" 
+                            Width="26" Height="26" 
+                            HorizontalAlignment="Right" VerticalAlignment="Top" 
+                            Margin="0,95,-13,0" 
+                            Background="#6A0DAD" Foreground="White" BorderThickness="0"
+                            Grid.RowSpan="2">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Grid>
+                                    <Ellipse Fill="{TemplateBinding Background}"/>
+                                    <TextBlock Text="◀" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="10"/>
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <!-- Boton Abajo (System Scan) -->
+                    <Button Grid.Row="3" Margin="20" Background="#CF9FFF" BorderThickness="0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="10">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock Text="🎯" Margin="0,0,10,0" FontFamily="Segoe UI Emoji" FontSize="14" />
+                                        <TextBlock Text="SYSTEM SCAN" FontWeight="Bold" Foreground="#32064C"/>
+                                    </StackPanel>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- MAIN CONTENT AREA -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                
+                <Border BorderBrush="#112A4F" BorderThickness="0,0,0,1">
+                   <Grid>
+                      <TextBlock Text="VANGUARDIST AI 2026" Foreground="#555" VerticalAlignment="Bottom" HorizontalAlignment="Left" FontSize="10" Margin="10,0,0,5"/>
+                     <!-- System Status Footer Header -->
+                   </Grid>
+                </Border>
+
+                <!-- Custom Window Bar and Tabs Area -->
+                <Grid Grid.Row="0">
+                    <!-- Fake Title Bar Controls -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,10,20,0" VerticalAlignment="Top" WindowChrome.IsHitTestVisibleInChrome="True">
+                        <Border Background="#112F3D" CornerRadius="12" Padding="8,4" Margin="0,0,20,0">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="8" Height="8" Fill="#00F2FF" Margin="0,0,5,0"/>
+                                <TextBlock Text="SYSTEM LIVE" Foreground="#00F2FF" FontSize="10" FontWeight="Bold" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <!-- Minimize, Close -->
+                        <Button Content="—" Click="BtnMinimize_Click" Foreground="White" Background="Transparent" BorderThickness="0" Width="30" FontSize="10"/>
+                        <Button Content="☐" Click="BtnMaximize_Click" Foreground="White" Background="Transparent" BorderThickness="0" Width="30" FontSize="12"/>
+                        <Button Content="✕" Click="BtnClose_Click" Foreground="White" Background="Transparent" BorderThickness="0" Width="30" FontSize="10"/>
+                    </StackPanel>
+                    
+                    <StackPanel HorizontalAlignment="Center" Margin="0,40,0,0">
+                        <TextBlock Text="BIOMETRIC REGISTRATION TERMINAL" Foreground="#555" FontSize="10" HorizontalAlignment="Center" Margin="0,0,0,15"  />
+                        <!-- Tab Buttons -->
+                        <Border Background="#1A1C29" CornerRadius="20" BorderBrush="#2A2F45" BorderThickness="1">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="REGISTRAR" Foreground="#4A1E5C" Background="#F1D1FF" FontWeight="Bold" BorderThickness="0" Width="130" Height="40">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="20">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <!-- Add shadow effect here ideally, but keeping it simple -->
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                                <Button Content="LISTADO DE EMPLEADOS" Foreground="#7A8DAB" Background="Transparent" BorderThickness="0" Width="180" Height="40">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="20">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <!-- SubView Enrollment -->
+                <views:EnrollmentView Grid.Row="1" Margin="20,20,20,0"/>
+
+                <!-- FOOTER -->
+                <Border Grid.Row="2" Background="#050B14" BorderBrush="#001F3F" BorderThickness="0,1,0,0">
+                    <Grid>
+                        <TextBlock Text="VANGUARDIST AI 2026" Foreground="#555" VerticalAlignment="Center" FontSize="10" Margin="20,0,0,0"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,20,0">
+                            <TextBlock Text="SYSTEM STATUS:" Foreground="#555" FontSize="10" Margin="0,0,5,0"/>
+                            <TextBlock Text="OPTIMAL" Foreground="#00F2FF" FontSize="10" FontWeight="Bold" Margin="0,0,20,0"/>
+                            <TextBlock Text="V2.6.0-STABLE" Foreground="#555" FontSize="10" Margin="0,0,20,0"/>
+                            <TextBlock Text="PROFILE: ADMIN" Foreground="#555" FontSize="10"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
 </Window>
