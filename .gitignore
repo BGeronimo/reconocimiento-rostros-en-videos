@@ -1,0 +1,50 @@
+## ----------------------------------------------------------------------
+## Estándar para Visual Studio / .NET
+## ----------------------------------------------------------------------
+
+# Directorios de compilación y carpetas de Visual Studio
+.vs/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+TestResults/
+
+# Archivos de usuario y configuraciones locales
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.userprefs
+
+# Archivos de caché y paquetes NuGet locales
+.nuget/
+packages/
+*.nupkg
+
+## ----------------------------------------------------------------------
+## Específico del Proyecto: Reconocimiento Facial (WPF / AI)
+## ----------------------------------------------------------------------
+
+# Base de Datos SQLite (Mencionada en la documentación)
+# Evita subir la base de datos local generada en runtime con empleados reales
+Data/*.db
+Data/*.sqlite
+Data/*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+
+# Archivos de Video para el AnalysisView (Evita llenar el repo con videos pesados)
+*.mp4
+*.avi
+*.mkv
+*.mov
+
+# Modelos ONNX (Nota: GitHub tiene un límite de 100MB por archivo)
+# Se ignoran para no saturar el repositorio. Deben descargarse o generarse localmente tras clonar.
+*.onnx
+
+# Archivos temporales y logs de ejecución
+*.log
+logs/
+temp/
