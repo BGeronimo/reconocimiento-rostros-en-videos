@@ -10,6 +10,7 @@ namespace ReconocimientoFacial
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = new ViewModels.MainViewModel();
         }
 
         private void MenuToggleButton_Click(object sender, RoutedEventArgs e)

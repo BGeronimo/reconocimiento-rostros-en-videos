@@ -12,6 +12,9 @@ namespace ReconocimientoFacial.Models
         public byte[] FaceEmbedding { get; set; }
         
         public DateTime CreatedAt { get; set; }
+
+        // Ruta de la imagen local
+        public string LocalProfileImagePath => System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "EmployeeFaces", $"{EmployeeCode}.jpg");
         
         // Propiedad auxiliar para trabajar en memoria (no se guarda en SQLite)
         public float[] GetEmbeddingArray()

@@ -9,8 +9,68 @@
         Background="#050B14" Foreground="#FFFFFF"
         WindowStyle="None" AllowsTransparency="True"
         Title="NEURAL SENTINEL" Height="700" Width="1050" WindowStartupLocation="CenterScreen">
-    
-    <Border BorderBrush="#112A4F" BorderThickness="1" CornerRadius="10" Background="#050B14" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
+        <Window.Resources>
+            <!-- Sidebar Item Style -->
+            <Style TargetType="RadioButton" x:Key="SidebarItemStyle">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="4,0,0,0"/>
+                <Setter Property="Foreground" Value="#7A8DAB"/>
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter VerticalAlignment="Center" Margin="20,0,0,0"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter Property="Background" Value="#1A0D26"/>
+                        <Setter Property="BorderBrush" Value="#6A0DAD"/>
+                        <Setter Property="Foreground" Value="#CF9FFF"/>
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#111824"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Top Tab Style -->
+            <Style TargetType="RadioButton" x:Key="TopTabStyle">
+                <Setter Property="Foreground" Value="#7A8DAB"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="FontWeight" Value="Normal"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="20">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsChecked" Value="True">
+                        <Setter Property="Background" Value="#F1D1FF"/>
+                        <Setter Property="Foreground" Value="#4A1E5C"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Background" Value="#2A2F45"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <!-- Bool to Vis Converter -->
+            <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        </Window.Resources>
+
+        <Border BorderBrush="#112A4F" BorderThickness="1" CornerRadius="10" Background="#050B14" MouseLeftButtonDown="Window_MouseLeftButtonDown">
         <Grid>
             <!-- Layout Base -->
             <Grid.ColumnDefinitions>
@@ -40,26 +100,26 @@
                     <!-- MENÚ ITEMS -->
                     <StackPanel Grid.Row="1" Margin="0,20,0,0">
                         <!-- Boton Activo (User Management) -->
-                        <Border Background="#1A0D26" BorderBrush="#6A0DAD" BorderThickness="4,0,0,0" Height="50">
-                            <StackPanel Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Center">
-                                <TextBlock Text="👤" Foreground="#CF9FFF" FontSize="18"/>
-                                <TextBlock x:Name="MenuText1" Text="User Management" Foreground="#CF9FFF" Margin="15,0,0,0" FontSize="14" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                        <RadioButton GroupName="Sidebar" Style="{StaticResource SidebarItemStyle}" IsChecked="{Binding IsUserManagementActive, Mode=OneWay}" Command="{Binding ChangeSectionCommand}" CommandParameter="UserManagement">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="👤" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" FontSize="18"/>
+                                <TextBlock x:Name="MenuText1" Text="User Management" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Margin="15,0,0,0" FontSize="14" VerticalAlignment="Center" FontWeight="SemiBold"/>
                             </StackPanel>
-                        </Border>
+                        </RadioButton>
                         <!-- Item Normal -->
-                        <Border Height="50" Background="Transparent">
-                            <StackPanel Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Center">
-                                <TextBlock Text="📹" Foreground="#555" FontSize="18"/>
-                                <TextBlock x:Name="MenuText2" Text="Video Analysis" Foreground="#7A8DAB" Margin="15,0,0,0" FontSize="14" VerticalAlignment="Center"/>
+                        <RadioButton GroupName="Sidebar" Style="{StaticResource SidebarItemStyle}" IsChecked="{Binding IsVideoAnalysisVisible, Mode=OneWay}" Command="{Binding ChangeSectionCommand}" CommandParameter="VideoAnalysis">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="📹" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" FontSize="18"/>
+                                <TextBlock x:Name="MenuText2" Text="Video Analysis" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Margin="15,0,0,0" FontSize="14" VerticalAlignment="Center"/>
                             </StackPanel>
-                        </Border>
+                        </RadioButton>
                         <!-- Item Normal -->
-                        <Border Height="50" Background="Transparent">
-                            <StackPanel Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Center">
-                                <TextBlock Text="⚙" Foreground="#555" FontSize="18"/>
-                                <TextBlock x:Name="MenuText3" Text="Settings" Foreground="#7A8DAB" Margin="15,0,0,0" FontSize="14" VerticalAlignment="Center"/>
+                        <RadioButton GroupName="Sidebar" Style="{StaticResource SidebarItemStyle}" IsChecked="{Binding IsSettingsVisible, Mode=OneWay}" Command="{Binding ChangeSectionCommand}" CommandParameter="Settings">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="⚙" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" FontSize="18"/>
+                                <TextBlock x:Name="MenuText3" Text="Settings" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" Margin="15,0,0,0" FontSize="14" VerticalAlignment="Center"/>
                             </StackPanel>
-                        </Border>
+                        </RadioButton>
                     </StackPanel>
 
                     <!-- Botón Flotante Toggle (Botón Circular en la union) -->
@@ -129,34 +189,33 @@
                     <StackPanel HorizontalAlignment="Center" Margin="0,40,0,0">
                         <TextBlock Text="BIOMETRIC REGISTRATION TERMINAL" Foreground="#555" FontSize="10" HorizontalAlignment="Center" Margin="0,0,0,15"  />
                         <!-- Tab Buttons -->
-                        <Border Background="#1A1C29" CornerRadius="20" BorderBrush="#2A2F45" BorderThickness="1">
+                        <Border Background="#1A1C29" CornerRadius="20" BorderBrush="#2A2F45" BorderThickness="1" Visibility="{Binding IsUserManagementActive, Converter={StaticResource BoolToVis}}">
                             <StackPanel Orientation="Horizontal">
-                                <Button Content="REGISTRAR" Foreground="#4A1E5C" Background="#F1D1FF" FontWeight="Bold" BorderThickness="0" Width="130" Height="40">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" CornerRadius="20">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                <!-- Add shadow effect here ideally, but keeping it simple -->
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
-                                <Button Content="LISTADO DE EMPLEADOS" Foreground="#7A8DAB" Background="Transparent" BorderThickness="0" Width="180" Height="40">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Border Background="{TemplateBinding Background}" CornerRadius="20">
-                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                            </Border>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
+                                <RadioButton Content="REGISTRAR" GroupName="UserMgmtTabs" Style="{StaticResource TopTabStyle}" IsChecked="{Binding IsRegistrarVisible, Mode=OneWay}" Width="130" Height="40" Command="{Binding ChangeTabCommand}" CommandParameter="Registrar"/>
+                                <RadioButton Content="LISTADO DE EMPLEADOS" GroupName="UserMgmtTabs" Style="{StaticResource TopTabStyle}" IsChecked="{Binding IsListadoVisible, Mode=OneWay}" Width="180" Height="40" Command="{Binding ChangeTabCommand}" CommandParameter="ListadoEmpleados"/>
                             </StackPanel>
                         </Border>
                     </StackPanel>
                 </Grid>
 
-                <!-- SubView Enrollment -->
-                <views:EnrollmentView Grid.Row="1" Margin="20,20,20,0"/>
+                <!-- SubViews Zone -->
+                <Grid Grid.Row="1" Margin="20,20,20,0">
+                    <!-- User Management -> Registrar -->
+                    <Grid Visibility="{Binding IsRegistrarVisible, Converter={StaticResource BoolToVis}}">
+                        <views:EnrollmentView/>
+                    </Grid>
+
+                    <!-- User Management -> Listado -->
+                    <Grid Visibility="{Binding IsListadoVisible, Converter={StaticResource BoolToVis}}">
+                        <views:EmployeeListView/>
+                    </Grid>
+
+                    <!-- Video Analysis -->
+                    <TextBlock Text="Vista de Video Analysis (Proximamente)" Foreground="#7A8DAB" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsVideoAnalysisVisible, Converter={StaticResource BoolToVis}}" />
+
+                    <!-- Settings -->
+                    <TextBlock Text="Configuraciones del Sistema" Foreground="#7A8DAB" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsSettingsVisible, Converter={StaticResource BoolToVis}}" />
+                </Grid>
 
                 <!-- FOOTER -->
                 <Border Grid.Row="2" Background="#050B14" BorderBrush="#001F3F" BorderThickness="0,1,0,0">
