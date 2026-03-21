@@ -268,6 +268,9 @@ namespace ReconocimientoFacial.ViewModels
 
                 MessageBox.Show($"¡{FullName} registrado con éxito en la Base de Datos!\nSu foto ha sido guardada.\nActualmente hay {totalRegistros} persona(s) registrada(s).", "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
                 ResetForm();
+
+                // Notificar que hay un nuevo empleado registrado
+                App.NotifyUserEnrolled();
             }
             catch (Exception ex)
             {

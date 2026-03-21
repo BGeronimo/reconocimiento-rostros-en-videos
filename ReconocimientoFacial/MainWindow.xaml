@@ -211,7 +211,9 @@
                     </Grid>
 
                     <!-- Video Analysis -->
-                    <TextBlock Text="Vista de Video Analysis (Proximamente)" Foreground="#7A8DAB" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsVideoAnalysisVisible, Converter={StaticResource BoolToVis}}" />
+                    <Grid Visibility="{Binding IsVideoAnalysisVisible, Converter={StaticResource BoolToVis}}">
+                        <views:VideoAnalysisView/>
+                    </Grid>
 
                     <!-- Settings -->
                     <TextBlock Text="Configuraciones del Sistema" Foreground="#7A8DAB" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsSettingsVisible, Converter={StaticResource BoolToVis}}" />

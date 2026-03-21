@@ -16,11 +16,22 @@ namespace ReconocimientoFacial.ViewModels
         [ObservableProperty]
         private string _searchQuery = "";
 
+        // Para eventos
+        private readonly System.EventHandler _onUserEnrolled;
+
         // Para filtrar u obtener datos iniciales
         public EmployeeListViewModel()
         {
             Employees = new ObservableCollection<Models.Employee>();
             LoadEmployees();
+
+            // Suscribirse al evento global
+            _onUserEnrolled = (s, e) => {
+                System.Windows.Application.Current.Dispatcher.Invoke(() => {
+                    LoadEmployees();
+                });
+            };
+            App.UserEnrolled += _onUserEnrolled;
         }
 
         public void LoadEmployees()
