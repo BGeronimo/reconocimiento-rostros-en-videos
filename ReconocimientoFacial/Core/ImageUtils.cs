@@ -49,16 +49,37 @@ namespace ReconocimientoFacial.Core
         }
 
         /// <summary>
-        /// Convierte una imagen a un Tensor NCHW para YOLO (Detección de cara).
+        /// Convierte una imagen a un Tensor NCHW para YOLO (Detección de cara) aplicando Letterboxing.
+        /// Retorna los parámetros de re-escalado (ratio, padX, padY) que se usarán al ajustar las bounding boxes resultantes.
         /// Normalización: pixel / 255.0
         /// </summary>
-        public static DenseTensor<float> ConvertToYoloTensor(Mat image, int targetSize = 640)
+        public static DenseTensor<float> ConvertToYoloTensor(Mat image, out float ratio, out float padX, out float padY, int targetSize = 640)
         {
+            // 1. Calcular tamaño de escalado preservando proporciones
+            ratio = Math.Min((float)targetSize / image.Width, (float)targetSize / image.Height);
+            int newW = (int)Math.Round(image.Width * ratio);
+            int newH = (int)Math.Round(image.Height * ratio);
+
+            // 2. Padding necesario para llegar a targetSize x targetSize
+            float dw = (targetSize - newW) / 2.0f;
+            float dh = (targetSize - newH) / 2.0f;
+
+            padX = (float)Math.Round(dw - 0.1f);
+            padY = (float)Math.Round(dh - 0.1f);
+
+            int top = (int)Math.Round(dh - 0.1f);
+            int bottom = (int)Math.Round(dh + 0.1f);
+            int left = (int)Math.Round(dw - 0.1f);
+            int right = (int)Math.Round(dw + 0.1f);
+
             using Mat resized = new Mat();
-            Cv2.Resize(image, resized, new Size(targetSize, targetSize)); // En la vida real, YOLO prefiere mantener el aspect ratio con padding, pero usaremos resize directo para simplicidad inicial
+            Cv2.Resize(image, resized, new Size(newW, newH), interpolation: InterpolationFlags.Linear);
+
+            using Mat padded = new Mat();
+            Cv2.CopyMakeBorder(resized, padded, top, bottom, left, right, BorderTypes.Constant, new Scalar(114, 114, 114));
 
             using Mat rgbImage = new Mat();
-            Cv2.CvtColor(resized, rgbImage, ColorConversionCodes.BGR2RGB);
+            Cv2.CvtColor(padded, rgbImage, ColorConversionCodes.BGR2RGB);
 
             var tensor = new DenseTensor<float>(new[] { 1, 3, targetSize, targetSize });
 
@@ -72,7 +93,7 @@ namespace ReconocimientoFacial.Core
                     for (int x = 0; x < targetSize; x++)
                     {
                         int pixelOffset = (y * stride) + (x * 3);
-                        
+
                         // Normalización matemática para YOLO v8/v10
                         tensor[0, 0, y, x] = ptr[pixelOffset + 0] / 255.0f; // R
                         tensor[0, 1, y, x] = ptr[pixelOffset + 1] / 255.0f; // G

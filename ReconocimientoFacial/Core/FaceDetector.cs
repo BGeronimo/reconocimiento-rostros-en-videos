@@ -41,8 +41,8 @@ namespace ReconocimientoFacial.Core
 
             int targetSize = 640;
 
-            // Paso 1: Usar nuestra utilidad ImageUtils para crear el Tensor NCHW Normalizado YOLO
-            var inputTensor = ImageUtils.ConvertToYoloTensor(frame, targetSize);
+            // Paso 1: Usar nuestra utilidad ImageUtils para crear el Tensor NCHW Normalizado YOLO aplicando Letterbox
+            var inputTensor = ImageUtils.ConvertToYoloTensor(frame, out float ratio, out float padX, out float padY, targetSize);
 
             // Paso 2: Ejecutar Inferencia de YOLO
             string inputName = _session.InputMetadata.Keys.First(); 
@@ -70,10 +70,6 @@ namespace ReconocimientoFacial.Core
             int numFeatures = isTransposed ? cols : rows;
             int numAnchors = isTransposed ? rows : cols;
 
-            // La salida de YOLO asume un grid de 640x640, por lo que aplicamos la regla de tres para devolver al tamaño de la imagen original (ej 1920x1080 o 1280x720)
-            float xRatio = (float)frame.Width / targetSize;
-            float yRatio = (float)frame.Height / targetSize;
-
             var boxes = new List<Rect>();
             var confidences = new List<float>();
 
@@ -90,10 +86,16 @@ namespace ReconocimientoFacial.Core
 
                 if (conf > confidenceThreshold)
                 {
-                    int x = (int)((xCenter - width / 2) * xRatio);
-                    int y = (int)((yCenter - height / 2) * yRatio);
-                    int w = (int)(width * xRatio);
-                    int h = (int)(height * yRatio);
+                    // Remover el padding de Letterbox y escalar de vuelta a la imagen original
+                    float rawX = (xCenter - padX) / ratio;
+                    float rawY = (yCenter - padY) / ratio;
+                    float rawW = width / ratio;
+                    float rawH = height / ratio;
+
+                    int x = (int)(rawX - rawW / 2);
+                    int y = (int)(rawY - rawH / 2);
+                    int w = (int)rawW;
+                    int h = (int)rawH;
 
                     // Clamp a las dimensiones para evitar colapsos al recortar fuera de la imagen
                     x = Math.Max(0, x);
@@ -112,7 +114,7 @@ namespace ReconocimientoFacial.Core
 
             if (boxes.Count == 0) return Array.Empty<Rect>();
 
-            // Supresión de no-máximos (NMS): Evita que un mismo rostro arroje 20 cajas diferentes que se solapen
+            // Supresión de no-máximos (NMS): Evita múltiples recuadros solapados
             CvDnn.NMSBoxes(boxes, confidences, confidenceThreshold, 0.4f, out int[] indices);
 
             return indices.Select(i => boxes[i]).ToArray();
